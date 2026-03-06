@@ -1,0 +1,388 @@
+<template>
+    <div class="list-page">
+        <div class="breadcrumb-wrapper">
+            <div class="bread_view">
+                <el-breadcrumb separator=">" class="breadcrumb">
+                    <el-breadcrumb-item class="first_breadcrumb" :to="{ path: '/' }">首页</el-breadcrumb-item>
+                    <el-breadcrumb-item class="second_breadcrumb" v-for="(item,index) in breadList" :key="index">{{item.name}}</el-breadcrumb-item>
+                </el-breadcrumb>
+            </div>
+            <div class="back_view" v-if="centerType">
+                <el-button class="back_btn btn-gradient" @click="backClick">返回</el-button>
+            </div>
+        </div>
+		<div class="list_search glass-card">
+			<div class="search_view">
+				<div class="search_label">
+					活动标题：
+				</div>
+				<div class="search_box">
+					<el-input class="search_inp input-dark" v-model="searchQuery.huodongbiaoti" placeholder="请输入活动标题"
+						clearable>
+					</el-input>
+				</div>
+			</div>
+			<div class="search_btn_view">
+				<el-button class="search_btn btn-gradient" @click="searchClick">搜索</el-button>
+				<el-button class="add_btn btn-gradient" v-if="btnAuth('dianpuhuodong','新增')" @click="addClick">新增</el-button>
+			</div>
+		</div>
+
+        <div class="data_view">
+            <div class="item glass-card animate-fade-up" v-for="(item,index) in list" :key="item.id" @click.stop="detailClick(item.id)" :style="{animationDelay: index*0.08+'s'}">
+                <div class="img_box">
+                    <img :src="item.imgUrls[0]" @click.stop="preViewClick(item.imgUrls[0])">
+                </div>
+                <div class="content">
+                    <div class="data_title activity-title">
+                        <span>{{item.huodongbiaoti}}</span>
+                    </div>
+                    <div class="activity-time-tag">
+                        <span>{{item.huodongshijian}}</span>
+                    </div>
+                    <div class="merchant-name">
+                        <span>{{item.shangjiamingcheng}}</span>
+                    </div>
+                    <div class="count-row"></div>
+                </div>
+            </div>
+        </div>
+
+				<el-pagination
+					background
+					:layout="layouts.join(',')"
+					:total="total"
+					:page-size="listQuery.limit"
+                    v-model:current-page="listQuery.page"
+					prev-text="上一页"
+					next-text="下一页"
+					:hide-on-single-page="false"
+					@size-change="sizeChange"
+					@current-change="currentChange"/>
+
+
+    </div>
+
+    <el-dialog v-model="preViewVisible" :title="'查看大图'" width="40%" destroy-on-close>
+        <div style="text-align:center">
+            <img :src="preViewUrl" style="max-width: 100%;" alt="">
+        </div>
+    </el-dialog>
+</template>
+
+<script setup>
+	import {
+		ref,
+		getCurrentInstance,
+		nextTick,
+        computed,
+        inject,
+	} from 'vue';
+    const moment = window.moment
+	import {
+		useRoute,
+		useRouter
+	} from 'vue-router';
+    import {
+        useStore
+    } from 'vuex';
+    const store = useStore()
+    const user = computed(()=>store.getters['user/session'])
+	const context = getCurrentInstance()?.appContext.config.globalProperties;
+	const router = useRouter()
+	const route = useRoute()
+    const baseUrl = ref(context.$config.url)
+	//基础信息
+	const tableName = 'dianpuhuodong'
+	const formName = '店铺活动'
+	//基础信息
+	const breadList = ref([{
+		name: formName
+	}])
+	const list = ref([])
+	const listQuery = ref({
+		page: 1,
+		limit: 10
+	})
+	const total = ref(0)
+	const listLoading = ref(false)
+	//权限验证
+	const btnAuth = (e,a)=>{
+		if(centerType.value){
+			return context?.$toolUtil.isBackAuth(e,a)
+		}else{
+			return context?.$toolUtil.isAuth(e,a)
+		}
+	}
+	const addClick = () => {
+		router.push('/index/dianpuhuodongAdd')
+	}
+	//判断是否从个人中心跳转
+	const centerType = ref(false)
+	//返回
+	const backClick = () => {
+		router.push(`/index/${context?.$toolUtil.storageGet('frontSessionTable')}Center`)
+	}
+	//搜索
+	const searchQuery = ref({})
+	//下拉列表
+	const searchClick = async() => {
+		listQuery.value.page = 1
+		getList()
+	}
+	//分页
+	const layouts = ref(["total","prev","pager","next","sizes"])
+	const sizeChange = (size) => {
+		listQuery.value.limit = size
+		getList()
+	}
+	const currentChange = (page) => {
+		listQuery.value.page = page
+		getList()
+	}
+	//分页
+	//列表
+	const getList = () => {
+		listLoading.value = true
+		let params = JSON.parse(JSON.stringify(listQuery.value))
+		if(searchQuery.value.huodongbiaoti&&searchQuery.value.huodongbiaoti!=''){
+			params.huodongbiaoti = '%' + searchQuery.value.huodongbiaoti + '%'
+		}
+		context?.$http({
+			url: `${tableName}/${centerType.value?'page':'list'}`,
+			method: 'get',
+			params: params
+		}).then(res => {
+			listLoading.value = false
+			list.value = res.data.data.list
+			total.value = Number(res.data.data.total)
+            list.value.forEach(item=>{
+                if(item.tupian!=null){
+                    item.imgUrls = item.tupian.split(',').map(url=> {
+                        if(url && url.substr(0,4)=='http'){
+                            return url
+                        }else{
+                            return baseUrl.value + url
+                        }
+                    })
+                }else{
+                    item.imgUrls = []
+                }
+            })
+		})
+	}
+	const detailClick = (id) => {
+		router.push(`${tableName}Detail?id=` + id + (centerType.value?'&&centerType=1':''))
+	}
+	//下载文件
+	const download = (file) =>{
+		if(!file){
+			context?.$toolUtil.message('文件不存在','error')
+		}
+		const a = document.createElement('a');
+		a.style.display = 'none';
+		a.setAttribute('target', '_blank');
+		file && a.setAttribute('download', file);
+		a.href = context?.$config.url + file;
+		document.body.appendChild(a);
+		a.click();
+		document.body.removeChild(a);
+	}
+	// 查看大图
+	const preViewUrl = ref('')
+	const preViewVisible = ref(false)
+	const preViewClick = (url) =>{
+		preViewUrl.value = url
+		preViewVisible.value = true
+	}
+	const init = async() => {
+		if(route.query.centerType){
+			centerType.value = true
+		}
+        if(context.$toolUtil.storageGet('frontToken') && !user.value.id){
+            await store.dispatch("user/getSession")
+        }
+		getList()
+	}
+	init()
+</script>
+<style lang="scss" scoped>
+.list-page {
+    background: transparent !important;
+    min-height: 100vh;
+    padding: 30px 7%;
+    width: 100%;
+}
+
+.breadcrumb-wrapper {
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .breadcrumb {
+        font-size: 16px;
+        
+        ::v-deep .el-breadcrumb__inner {
+            color: var(--color-gray) !important;
+            &.is-link:hover {
+                color: var(--color-pink) !important;
+            }
+        }
+        
+        ::v-deep .el-breadcrumb__separator {
+            color: var(--color-pink) !important;
+            font-weight: bold;
+        }
+    }
+}
+
+.list_search {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 30px;
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 107, 157, 0.2);
+    border-radius: 20px;
+    padding: 20px 24px;
+    
+    .search_view {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        
+        .search_label {
+            color: var(--color-gray);
+            font-size: 14px;
+            white-space: nowrap;
+        }
+        
+        .search_box {
+            width: 250px;
+        }
+    }
+    
+    ::v-deep .el-input__wrapper {
+        background: rgba(255, 255, 255, 0.05) !important;
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1) inset !important;
+        border-radius: 12px;
+        
+        .el-input__inner {
+            color: #ffffff !important;
+            &::placeholder {
+                color: rgba(255, 255, 255, 0.3) !important;
+            }
+        }
+    }
+}
+
+.data_view {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 30px !important;
+    margin: 30px 0 40px !important;
+    width: 100% !important;
+    
+    .item {
+        background: rgba(255, 255, 255, 0.05) !important;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 107, 157, 0.18) !important;
+        border-radius: 20px !important;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        position: relative;
+        width: 100% !important;
+        margin: 0 !important;
+        
+        &:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(255, 107, 157, 0.18);
+            border-color: rgba(255, 107, 157, 0.45) !important;
+            
+            .img_box img {
+                transform: scale(1.06);
+            }
+        }
+        
+        .img_box {
+            width: 100% !important;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            display: block;
+            
+            img {
+                width: 100% !important;
+                height: 100% !important;
+                object-fit: cover;
+                display: block;
+                transition: transform 0.4s ease;
+            }
+        }
+        
+        .content {
+            padding: 16px;
+            
+            .activity-title {
+                color: #ffffff;
+                font-weight: bold;
+                font-size: 15px;
+                margin-bottom: 12px;
+                @extend .text-one-row;
+            }
+            
+            .activity-time-tag {
+                background: rgba(255, 107, 157, 0.1);
+                color: #ff6b9d;
+                border: 1px solid rgba(255, 107, 157, 0.3);
+                border-radius: 50px;
+                font-size: 12px;
+                padding: 3px 12px;
+                display: inline-block;
+                margin-bottom: 12px;
+            }
+            
+            .merchant-name {
+                color: var(--color-gray);
+                font-size: 13px;
+                @extend .text-one-row;
+            }
+        }
+    }
+}
+
+::v-deep .el-pagination {
+    justify-content: center;
+    .el-pager li {
+        background: rgba(255, 255, 255, 0.05) !important;
+        color: var(--color-gray) !important;
+        border-radius: 8px;
+        &:hover {
+            color: var(--color-pink) !important;
+        }
+        &.is-active {
+            background: linear-gradient(45deg, var(--color-pink), var(--color-blue)) !important;
+            color: #ffffff !important;
+        }
+    }
+    .btn-prev, .btn-next {
+        background: rgba(255, 255, 255, 0.05) !important;
+        color: var(--color-gray) !important;
+        border-radius: 8px;
+        &:disabled {
+            opacity: 0.3;
+        }
+    }
+}
+
+.text-one-row {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+</style>
