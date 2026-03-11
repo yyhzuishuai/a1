@@ -14,11 +14,11 @@
 						</div>
 					</div>
 					<div class="search_btn_view">
-						<el-button class="search_btn" type="primary" @click="searchClick()" size="small">搜索</el-button>
+						<el-button class="search_btn" type="primary" @click="searchClick()" size="small" icon="Search">搜索</el-button>
 					</div>
 				</el-form>
 				<div class="btn_view">
-					<el-button class="add_btn" type="success" @click="addClick" v-if="btnAuth('zhoubiandingzhi','新增')">
+					<el-button class="add_btn" type="success" @click="addClick" v-if="btnAuth('zhoubiandingzhi','新增')" icon="Plus">
 						新增
 					</el-button>
 					<el-button class="del_btn" type="danger" :disabled="selRows.length?false:true" @click="delClick(null)"  v-if="btnAuth('zhoubiandingzhi','删除')">
@@ -34,8 +34,8 @@
 				:data="list"
 				@row-click="listChange">
 				<el-table-column :resizable='true' align="left" header-align="left" type="selection" width="55" />
-				<el-table-column label="序号" width="70" :resizable='true' align="left" header-align="left">
-					<template #default="scope">{{ (listQuery.page-1)*listQuery.limit+scope.$index + 1}}</template>
+				<el-table-column label="序号" width="70" :resizable='true' align="center" header-align="center" class-name="index-column">
+					<template #default="scope"><span>{{ (listQuery.page-1)*listQuery.limit+scope.$index + 1}}</span></template>
 				</el-table-column>
 				<el-table-column min-width="140"
 					:resizable='true'

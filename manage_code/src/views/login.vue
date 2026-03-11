@@ -1,48 +1,41 @@
 <template>
 	<div class="login_view">
-
-<div class="form" style="z-index: 1;">
-    <div class="projectName">{{projectName}}</div>
+		<div class="login_box">
+			<div class="title_view">
+				<h1 class="projectName">{{projectName}}</h1>
+				<div class="title_line"></div>
+			</div>
+			<div class="login_form">
 				<div class="form-item roles" v-if="userList.length>1">
-					<div class="label">
-						用户类型：
-					</div>
-				  <el-select v-model="loginForm.role" placeholder="请选择用户类型">
-					<el-option v-for="(item,index) in userList" :label="item.roleName" :value="item.roleName"></el-option>
-				  </el-select>
+					<div class="label">用户类型</div>
+					<el-select v-model="loginForm.role" placeholder="请选择用户类型" class="form-control">
+						<el-option v-for="(item,index) in userList" :key="index" :label="item.roleName" :value="item.roleName"></el-option>
+					</el-select>
 				</div>
 
 				<div class="form-item userName" v-if="loginType==1">
-					<div class="label">
-						账号：
-					</div>
-					<el-input class="item-input" v-model="loginForm.username" placeholder="请输入账号" name="username" />
+					<div class="label">账号</div>
+					<el-input class="item-input form-control" v-model="loginForm.username" placeholder="请输入账号" name="username" />
 				</div>
 
 				<div class="form-item password" v-if="loginType==1">
-					<div class="label">
-						密码：
-					</div>
-					<el-input class="item-input" v-model="loginForm.password" type="password" show-password placeholder="请输入密码" @keydown.enter.native="handleLogin"  />
+					<div class="label">密码</div>
+					<el-input class="item-input form-control" v-model="loginForm.password" type="password" show-password placeholder="请输入密码" @keydown.enter.native="handleLogin" />
 				</div>
-
 
 				<div class="remember_view" v-if="loginType==1">
-					<el-checkbox v-model="rememberPassword" label="记住密码" size="large" :true-label="true"
-						:false-label="false" />
+					<el-checkbox v-model="rememberPassword" label="记住密码" size="large" />
 				</div>
 
+				<div class="login-row">
+					<el-button class="login_btn" v-if="loginType==1" @click="handleLogin">登 录</el-button>
+				</div>
 
-    <div class="login-row">
-				<el-button class="login" v-if="loginType==1" @click="handleLogin">登录</el-button>
-
-    </div>
-
-    <div class="register-row">
-                    <el-button class="register" @click="handleRegister('shangjia')">注册商家</el-button>
-
-    </div>
-</div>
+				<div class="register-row">
+					<span class="register_link" @click="handleRegister('shangjia')">注册商家</span>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 <script setup>
@@ -170,240 +163,168 @@
 
 <style lang="scss">
 	.login_view {
-        background-image: url("http://clfile.zggen.cn/20251108/6d6011d3e17547d9a426fe7c4ddf9cdc.webp")!important;
+		min-height: 100vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background-image: url(../assets/img/beijing24.jpg) !important;
+		background-size: cover;
+		background-repeat: no-repeat;
+		background-position: center;
+		font-family: "PingFang SC", "HarmonyOS Sans", "Microsoft YaHei", sans-serif;
+
+		.login_box {
+			width: 90%;
+			max-width: 400px;
+			padding: 40px;
+			background: rgba(255, 255, 255, 0.8);
+			backdrop-filter: blur(15px);
+			border-radius: 20px;
+			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), 0 5px 15px rgba(255, 165, 0, 0.2);
+			border: 1px solid rgba(255, 255, 255, 0.3);
+			animation: fadeIn 0.8s ease-out;
+
+			.title_view {
+				text-align: center;
+				.projectName {
+					font-size: 20px;
+					color: #ff6b35;
+					font-weight: 700;
+					margin-bottom: 8px;
+					line-height: 1.4;
+				}
+				.title_line {
+					border-bottom: 2px solid #ff9a44;
+					width: 60px;
+					margin: 0 auto 20px;
+				}
+			}
+
+			.login_form {
+				.form-item {
+					margin-bottom: 20px;
+					
+					.label {
+						font-size: 14px;
+						color: #666;
+						margin-bottom: 8px;
+						font-weight: 500;
+					}
+
+					.form-control {
+						width: 100%;
+						background: rgba(255, 255, 255, 0.9);
+						border: 2px solid transparent;
+						border-radius: 10px;
+						transition: all 0.25s ease;
+
+						.el-input__wrapper, .el-select__wrapper {
+							background: transparent !important;
+							box-shadow: none !important;
+							border: none !important;
+							padding: 4px 12px;
+							height: 44px;
+						}
+
+						&.is-focus, &:focus-within {
+							border-color: #ff9a44;
+							background: #ffffff;
+						}
+
+						.el-input__inner {
+							font-size: 14px;
+							&::placeholder {
+								color: #aaa;
+							}
+						}
+					}
+				}
+
+				/* 用户类型下拉框自定义样式 */
+				.el-select.form-control {
+					.el-select__wrapper {
+						appearance: none;
+						background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff9a44'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+						background-repeat: no-repeat;
+						background-position: right 12px center;
+						background-size: 20px;
+						padding-right: 40px;
+					}
+					.el-icon {
+						display: none !important;
+					}
+				}
+
+				.remember_view {
+					margin-bottom: 20px;
+					.el-checkbox {
+						accent-color: #ff6b35;
+						.el-checkbox__label {
+							color: #666;
+							font-size: 14px;
+						}
+						&.is-checked .el-checkbox__inner {
+							background-color: #ff6b35;
+							border-color: #ff6b35;
+						}
+					}
+				}
+
+				.login-row {
+					margin-bottom: 20px;
+					.login_btn {
+						width: 100%;
+						height: 48px;
+						background: linear-gradient(135deg, #ff9a44, #ff6b35);
+						border: none;
+						border-radius: 10px;
+						color: white;
+						font-size: 16px;
+						font-weight: 600;
+						letter-spacing: 6px;
+						cursor: pointer;
+						transition: all 0.25s ease;
+
+						&:hover {
+							transform: translateY(-2px);
+							box-shadow: 0 8px 20px rgba(255, 107, 53, 0.4);
+							filter: brightness(1.05);
+						}
+
+						&:active {
+							transform: translateY(0);
+						}
+					}
+				}
+
+				.register-row {
+					text-align: center;
+					.register_link {
+						font-size: 13px;
+						color: #999;
+						cursor: pointer;
+						transition: all 0.3s ease;
+
+						&:hover {
+							color: #ff6b35;
+							text-decoration: underline;
+						}
+					}
+				}
+			}
+		}
 	}
-.login_view {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    position: relative;
-    overflow: hidden;
-    background-size: 70vh 100vh;
-    background-repeat: no-repeat;
-    background-position: 10% 0;
-}
 
-.login_view .form {
-    padding: 50px 30px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-    width: 550px;
-    border-radius: 10px;
-    color: #000;
-    overflow: visible;
-    margin-right: 10%;
-    background: #fff;
-}
+	@keyframes fadeIn {
+		from { opacity: 0; transform: translateY(20px); }
+		to { opacity: 1; transform: translateY(0); }
+	}
 
-.login_view .projectName {
-    font-size: 23px;
-    width: 700px;
-    text-align: center;
-    margin-top: 0px;
-    font-weight: 700;
-    margin-bottom: 20px;
-    /* border-bottom: 4px solid var(--theme); */
-    /* padding-bottom: 20px; */
-    white-space: nowrap;
-}
-
-.login_view .form-item {
-    width: 100%;
-    padding: 0 10px;
-    border-radius: 6px;
-    line-height: 50px;
-    display: flex;
-    margin-bottom: 20px;
-    align-items: center;
-    background: #fff;
-    height: 50px;
-    color: #000;
-    border: 1px  solid #ccc;
-}
-
-.login_view .el-input__wrapper {
-    border: none;
-    outline: none;
-    box-shadow: none!important;
-    background: none;
-}
-
-.login_view .label {
-    color: #000;
-    padding: 0 10px;
-    white-space: nowrap;
-    width: auto;
-    text-align: left;
-    line-height: 30px;
-    flex-shrink: 0;
-}
-
-.login_view .code-info {
-    width: 120px;
-    background: var(--theme);
-    flex-shrink: 0;
-    display: flex;
-    justify-content: space-around;
-    font-size: 20px;
-    position: absolute;
-    right: 5px;
-    bottom: 0;
-    height: 40px;
-    line-height: 40px;
-    border-radius: 6px;
-    top: 5px;
-}
-
-.login_view .form-item.code {
-    /* margin-right: 140px; */
-    position: relative;
-    width: 100%;
-}
-
-.login_view .form-item.roles {
-    position: relative;
-    display: flex;
-    gap: 20px;
-    margin-top: 20px;
-    padding: 10px 20px;
-    background: #fff;
-    height: auto;
-    border: 1px solid #ccc;
-}
-
-.login_view .el-radio.role {
-    background: #fff;
-    border: 1px solid #eee;
-    padding: 10px;
-    flex: 1;
-    margin-right: 0;
-    border-radius: 8px;
-}
-
-.login_view .login {
-    width: 100%;
-    height: 50px;
-    background: var(--theme);
-    color: #fff;
-    font-size: 18px;
-    border: 0px solid var(--theme);
-    border-radius: 10px;
-    margin: 0 auto;
-}
-.login_view .el-button.face{
-    width: 100%;
-    margin-top: 20px;
-    height: 50px;
-    color: var(--theme);
-    border: none;
-    background: #fff;
-    font-size: 18px;
-    margin-left: 0;
-    border-radius: 10px;
-    border: 1px solid;
-}
-
-.login_view .register {
-    background: none;
-    border: none;
-    color: #333;
-    border: 1px solid #999;
-    height: 40px;
-    flex: 1;
-    margin: 0;
-}
-
-.login_view .forget {
-    position: relative;
-    height: 50px;
-    color: var(--theme);
-    border: none;
-    background: none;
-    font-size: 14px;
-    margin-left: 0;
-    border-radius: 10px;
-}
-
-.login_view .img {
-    background: url(http://clfile.zggen.cn/20250817/80398b9b44024bfc8516fe0de27cacf6.webp);
-    height: 100%;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-color: #ebead6;
-    flex: 1;
-}
-
-.login_view .box {
-    display: flex;
-    width: 70vw;
-    min-width: 1200px;
-    height: 700px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    border-radius: 20px;
-    overflow: hidden;
-}
-
-.login_view .form-item:hover {
-    border-color: var(--theme);
-}
-
-.login_view .role {
-    text-align: center;
-    background: var(--theme);
-    border: 1px solid #999;
-    line-height: 40px;
-    color: #000;
-    border-radius: 6px;
-}
-
-.login_view .role.tabActive {
-    background: var(--theme);
-    border-color: var(--theme);
-    color: #fff;
-}
-
-.login_view .remember_view {
-    text-align: center;
-    background: #fff;
-    height: auto;
-    padding: 0 10px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    color: #fff;
-    width: 100%;
-}
-
-.login_view .item-input {
-    background: #fff;
-    border-radius: 6px;
-    height: 40px;
-}
-
-.login_view .register-row {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    margin-top: 20px;
-    width: 100%;
-    align-items: center;
-    padding-bottom: 10px;
-    gap: 30px;
-}
-
-.login_view .register:hover {
-}
-
-.login_view .login-row {
-    display: flex;
-    width: 100%;
-}
-
-.login_view .el-select__wrapper {
-    box-shadow: none!important;
-}
+	/* 适配移动端 */
+	@media (max-width: 480px) {
+		.login_view .login_box {
+			width: 90%;
+			padding: 30px 20px;
+		}
+	}
 </style>

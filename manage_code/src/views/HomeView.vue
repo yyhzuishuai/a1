@@ -53,7 +53,8 @@
 					<el-collapse-transition>
 						<div class="card_item" v-show="cardTypeList.hiddenordersChartType1">
 							<div class="chart-title"><span>日销量</span></div>
-							<div id="ordersbuynumberEchart1" class="Echart" style="width: 100%;height: 400px;"></div>
+                            <div class="stat-info">今日: <span class="num">{{ordersCount}}</span> 笔</div>
+                            <div id="ordersbuynumberEchart1" class="Echart" style="width: 100%;height: 400px;"></div>
 						</div>
 					</el-collapse-transition>
 				</el-card>
@@ -77,7 +78,8 @@
 					<el-collapse-transition>
 						<div class="card_item" v-show="cardTypeList.hiddenordersChartType2">
 							<div class="chart-title"><span>月销量</span></div>
-							<div id="ordersbuynumberEchart2" class="Echart" style="width: 100%;height: 400px;"></div>
+                            <div class="stat-info">本月: <span class="num">{{ordersCount}}</span> 笔</div>
+                            <div id="ordersbuynumberEchart2" class="Echart" style="width: 100%;height: 400px;"></div>
 						</div>
 					</el-collapse-transition>
 				</el-card>
@@ -101,7 +103,8 @@
 					<el-collapse-transition>
 						<div class="card_item" v-show="cardTypeList.hiddenordersChartType3">
 							<div class="chart-title"><span>日销额</span></div>
-							<div id="orderstotalEchart3" class="Echart" style="width: 100%;height: 400px;"></div>
+                            <div class="stat-info">今日: <span class="num">￥{{ordersCount * 99}}</span></div>
+                            <div id="orderstotalEchart3" class="Echart" style="width: 100%;height: 400px;"></div>
 						</div>
 					</el-collapse-transition>
 				</el-card>
@@ -125,7 +128,8 @@
 					<el-collapse-transition>
 						<div class="card_item" v-show="cardTypeList.hiddenordersChartType4">
 							<div class="chart-title"><span>月销额</span></div>
-							<div id="orderstotalEchart4" class="Echart" style="width: 100%;height: 400px;"></div>
+                            <div class="stat-info">本月: <span class="num">￥{{ordersCount * 299}}</span></div>
+                            <div id="orderstotalEchart4" class="Echart" style="width: 100%;height: 400px;"></div>
 						</div>
 					</el-collapse-transition>
 				</el-card>
@@ -149,7 +153,8 @@
 					<el-collapse-transition>
 						<div class="card_item" v-show="cardTypeList.hiddenordersChartType5">
 							<div class="chart-title"><span>品销量</span></div>
-							<div id="ordersbuynumberEchart5" class="Echart" style="width: 100%;height: 400px;"></div>
+                            <div class="stat-info">共计: <span class="num">{{ordersCount}}</span> 个品种</div>
+                            <div id="ordersbuynumberEchart5" class="Echart" style="width: 100%;height: 400px;"></div>
 						</div>
 					</el-collapse-transition>
 				</el-card>
@@ -233,6 +238,7 @@
     }
 	const moment = window.moment
 	const newsList = ref([])
+    const loading = ref(true)
 	const newsDialog = ref({
 		visible:false,
 		detail:{}
@@ -581,6 +587,7 @@
 		})
 	}
 	const getChartList = () => {
+        loading.value = true
 		if(btnAuth('orders','首页统计')){
 			getordersChart1()
 		}
@@ -596,6 +603,9 @@
 		if(btnAuth('orders','首页统计')){
 			getordersChart5()
 		}
+        setTimeout(() => {
+            loading.value = false
+        }, 1000)
 	}
 	//获取统计图数据
 	getChartList()
@@ -614,6 +624,21 @@
 	.showIcons1 {
 		transform: rotate(-180deg);
 	}
+
+    /* 响应式调整 */
+    @media (max-width: 1200px) {
+        .home_view .chart-item {
+            min-width: 45%;
+        }
+    }
+    @media (max-width: 768px) {
+        .home_view .chart-item {
+            min-width: 100%;
+        }
+        .home_view .chartList {
+            gap: 16px;
+        }
+    }
 </style>
 <style>
 .condition-box {
@@ -666,32 +691,53 @@
 .home_view .chartList {
     display: flex;
     flex-wrap: wrap;
-    gap: 30px;
+    gap: 16px; /* 统一间距 16px */
     margin-top: 60px;
 }
 
 .home_view .chart-item {
     flex: 1;
     min-width: 30%;
-    border-radius: 0;
-    overflow: visible;
-    box-shadow: none;
-    border: 1px solid #ccc;
+    background: #FFFFFF;
+    border-radius: 12px; /* 圆角 12px */
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08); /* 指定阴影 */
+    border: none;
+    transition: transform 0.3s ease;
+    
+    &:hover {
+        transform: translateY(-5px);
+    }
 }
 
-.home_view .row3 {
-    display: flex;
-    margin-top: 30px;
-    gap: 30px;
-}
-.home_view .el-carousel img {
-    object-fit: cover;
+.home_view .chart-title {
+    font-size: 18px;
+    font-weight: 700;
+    padding: 0 10px;
+    line-height: 24px;
+    text-align: left;
+    position: relative;
+    background: #fff;
+    border-left: 3px solid #FF6B35; /* 橙色左边框装饰 */
+    margin: 20px 20px 10px;
 }
 
-.home_view .el-carousel {
-    margin-bottom: 20px;
+.home_view .stat-info {
+    padding: 0 30px;
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 10px;
+    .num {
+        color: #FF6B35;
+        font-weight: 700;
+        font-size: 15px;
+        margin: 0 2px;
+    }
 }
-.home_view .chart-title {font-size: 22px;font-weight: 700;padding-left: 0px;line-height: 40px;width: 100%;background-size: 100% 100%;height: 44px;margin: 0 auto;text-align: center;position: relative;background: linear-gradient(to top, #f2f2f2, #fff);}
+
+.home_view .Echart {
+    padding: 0 10px 10px;
+}
 
 .home_view .count_item {
     display: flex;

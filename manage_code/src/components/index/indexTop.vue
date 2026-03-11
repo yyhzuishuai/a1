@@ -549,17 +549,34 @@
     justify-content: space-between;
     flex-wrap: wrap;
     padding: 0px 40px;
-    position: fixed;
+    position: fixed; /* 恢复 fixed 定位 */
     top: 0;
     left: 0;
     width: 100%;
     color: #fff;
     z-index: 9;
     height: 100px;
-    background: linear-gradient(135deg, #FF8C69, #FF7055 50%, #FFB347);
-    box-shadow: 0 2px 12px rgba(255,140,105,0.35);
+    /* 135deg 渐变背景 + 微妙光泽感 */
+    background: linear-gradient(135deg, #FF8C42 0%, #FF6B35 100%) !important;
+    overflow: hidden; /* 防止光泽伪元素溢出 */
+    
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 50%, rgba(0,0,0,0.05) 100%);
+        pointer-events: none;
+        z-index: 1;
+    }
+    backdrop-filter: blur(10px);
+    /* 底部微投影 */
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.12);
 }
 
+/* 恢复装饰元素 */
 .top_view::after {
     content: '✨🌸';
     position: absolute;
@@ -579,7 +596,8 @@
     font-size: 24px;
     color: #FFFFFF;
     font-weight: 700;
-    text-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    /* 增加轻微文字阴影 */
+    text-shadow: 0 1px 3px rgba(0,0,0,0.15);
 }
 
 .top_view .currentDate {
@@ -589,8 +607,22 @@
 .top_view .notice-btn {
     margin: 0 10px;
     border: none;
-    color: var(--theme);
+    color: #FF6B35;
     background: #fff;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
 }
 
 .top_view img.user-avatar {
@@ -603,10 +635,18 @@
     align-items: center;
     gap: 6px;
     outline: none;
-    background: rgba(255,255,255,0.2);
-    border-radius: 20px;
+    /* 恢复原始大小并添加美化样式 */
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 24px;
     padding: 4px 14px;
     color: #FFFFFF;
+    transition: all 0.3s ease;
+    cursor: pointer;
+
+    &:hover {
+        transform: scale(1.02);
+        background: rgba(255, 255, 255, 0.25);
+    }
 }
 
 .top_view .nickname {
@@ -616,6 +656,7 @@
 .top_view .avatar-wrapper>.el-icon {
     order: 3;
 }
+
 .top_view iframe {
     width: 220px;
     height: 18px;
