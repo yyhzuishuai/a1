@@ -88,13 +88,11 @@
       </div>
   
   <div class="content">
-                            <div class="data_title">
-                                <span>
+                            <div class="data_title_row">
+                                <span class="data_title">
                                     动漫品牌：{{item.dongmanpinpai}}
                                 </span>
-                            </div>
-                            <div class="data_title">
-                                <span>
+                                <span class="data_score">
                                     评分：{{item.score}}
                                 </span>
                             </div>
@@ -504,11 +502,25 @@
         .content {
             padding: 14px 16px;
             
-            .data_title {
+            .data_title_row {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
                 margin-bottom: 8px;
-                color: rgba(255, 255, 255, 0.55);
-                font-size: 13px;
-                @extend .text-one-row;
+                gap: 10px;
+                
+                .data_title {
+                    color: rgba(255, 255, 255, 0.55);
+                    font-size: 13px;
+                    @extend .text-one-row;
+                    flex: 1;
+                }
+                
+                .data_score {
+                    color: rgba(255, 255, 255, 0.55);
+                    font-size: 13px;
+                    white-space: nowrap;
+                }
             }
             
             .data_price {
