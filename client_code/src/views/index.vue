@@ -8,6 +8,45 @@
                     </div>
                     <div class="headerbottom">
                         <div class="projectName text-gradient">{{projectName}}</div>
+                        
+                        <div class="menu-wrapper">
+                            <el-scrollbar wrap-class="scrollbar-wrapper" class="menu_scrollbar">
+                                <el-menu :unique-opened="true" :default-active="menuIndex"
+                                     class="menu_view" mode="horizontal" @select="menuChange"
+                                     :key="menuIndex"  :ellipsis="false">
+                                    <el-menu-item class="first-item" index="/index/home" @click="menuHandler('/')">
+                                        <i class="iconfont icon-zhuye2"></i>
+                                        <template #title>
+                                            <span>首页</span>
+                                        </template>
+                                    </el-menu-item>
+                                    <template v-for="(menu,index) in menuList" :key="menu.menu">
+                                        <el-sub-menu v-if="menu.child.length>1" :index="menu.name" class="first-item" :teleported="true">
+                                            <template #title>
+                                                <i class="iconfont" :class="menu.icon"></i>
+                                                <span>{{ menu.name }}</span>
+                                            </template>
+                                            <el-menu-item class="second-item" v-for=" (child,index1) in menu.child" :key="index1"
+                                                          :index="child.url" @click="menuHandler(child.url)">{{ child.name }}
+                                            </el-menu-item>
+                                        </el-sub-menu>
+                                        <el-menu-item v-else :index="menu.child[0].url" class="first-item" @click="menuHandler(menu.child[0].url)">
+                                            <i class="iconfont" :class="menu.icon"></i>
+                                            <template #title>
+                                                <span>{{menu.child[0].name}}</span>
+                                            </template>
+                                        </el-menu-item>
+                                    </template>
+                                    <el-menu-item v-if="Token" :index="`/index/${context.$toolUtil.storageGet('frontSessionTable')}Center`" class="first-item" @click="menuHandler('center')">
+                                        <i class="iconfont icon-user1"></i>
+                                        <template #title>
+                                            <span>个人中心</span>
+                                        </template>
+                                    </el-menu-item>
+                                </el-menu>
+                            </el-scrollbar>
+                        </div>
+
                         <div v-if="Token" class="cart" style="cursor: pointer" @click="menuHandler('/index/cartList')">
                             <i class="iconfont icon-gouwuche1"></i>
                             <span>购物车</span>
@@ -18,7 +57,7 @@
                         <div class="user" v-if="Token">
                             <el-dropdown class="avatar-container" trigger="hover">
                                 <div class="avatar-wrapper">
-                                    <img class="user-avatar" :src="store.getters['user/avatar']" style="width: 50px">
+                                    <img class="user-avatar" :src="store.getters['user/avatar']">
                                     <div class="nickname">{{store.getters['user/username']}}</div>
                                     <el-icon class="el-icon-arrow-down">
                                         <arrow-down />
@@ -37,43 +76,6 @@
                             </el-dropdown>
                         </div>
                     </div>
-                </div>
-                <div class="menu-wrapper">
-                    <el-scrollbar wrap-class="scrollbar-wrapper" class="menu_scrollbar">
-                        <el-menu :unique-opened="true" :default-active="menuIndex"
-                             class="menu_view" mode="horizontal" @select="menuChange"
-                             :key="menuIndex"  :ellipsis="false">
-                            <el-menu-item class="first-item" index="/index/home" @click="menuHandler('/')">
-                                <i class="iconfont icon-zhuye2"></i>
-                                <template #title>
-                                    <span>首页</span>
-                                </template>
-                            </el-menu-item>
-                            <template v-for="(menu,index) in menuList" :key="menu.menu">
-                                <el-sub-menu v-if="menu.child.length>1" :index="menu.name" class="first-item" :teleported="true">
-                                    <template #title>
-                                        <i class="iconfont" :class="menu.icon"></i>
-                                        <span>{{ menu.name }}</span>
-                                    </template>
-                                    <el-menu-item class="second-item" v-for=" (child,index1) in menu.child" :key="index1"
-                                                  :index="child.url" @click="menuHandler(child.url)">{{ child.name }}
-                                    </el-menu-item>
-                                </el-sub-menu>
-                                <el-menu-item v-else :index="menu.child[0].url" class="first-item" @click="menuHandler(menu.child[0].url)">
-                                    <i class="iconfont" :class="menu.icon"></i>
-                                    <template #title>
-                                        <span>{{menu.child[0].name}}</span>
-                                    </template>
-                                </el-menu-item>
-                            </template>
-                            <el-menu-item v-if="Token" :index="`/index/${context.$toolUtil.storageGet('frontSessionTable')}Center`" class="first-item" @click="menuHandler('center')">
-                                <i class="iconfont icon-user1"></i>
-                                <template #title>
-                                    <span>个人中心</span>
-                                </template>
-                            </el-menu-item>
-                        </el-menu>
-                    </el-scrollbar>
                 </div>
             </div>
             <div class="rotation_view" >
@@ -281,20 +283,13 @@
     position: sticky;
     top: 0;
     z-index: 1000;
-    background: rgba(13, 13, 26, 0.85);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255, 107, 157, 0.15);
-    
-    &::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 2px;
-        background: linear-gradient(90deg, var(--color-pink), var(--color-blue));
-    }
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid #F0E0EA;
+    height: 64px;
+    display: flex;
+    align-items: center;
 }
 
 .index_top .top-header {
@@ -303,21 +298,8 @@
     background: transparent;
     margin: 0 auto;
     display: flex;
-    flex-direction: column; 
-    gap: 0; 
     align-items: center;
-    color: #fff;
-}
-
-.index_top .projectName {
-    margin-right: auto;
-    font-size: 24px;
-    font-weight: 700;
-    white-space: nowrap;
-}
-
-.index_top .login {
-    margin: 0;
+    height: 100%;
 }
 
 .headerbottom {
@@ -325,114 +307,199 @@
     display: flex;
     align-items: center;
     background: transparent;
-    padding: 15px 40px;
+    padding: 0 40px;
     gap: 20px;
+    height: 100%;
+}
+
+.index_top .projectName {
+    margin-right: 20px;
+    font-size: 16px;
+    font-weight: 800;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 260px;
+    font-family: 'Nunito', 'Noto Sans SC', sans-serif;
+    background: var(--gradient-main);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    flex-shrink: 0;
 }
 
 .menu-wrapper {
-    width: 100%;
-    padding: 0 7%;
-    margin: 0 auto;
+    flex: 1;
+    padding: 0;
     background: transparent;
     border: none;
     box-shadow: none;
-    overflow: visible;
+    overflow: hidden;
+    margin: 0 20px;
 }
 
 .menu-wrapper ul.el-menu.el-menu--horizontal.menu_view {
     background: transparent;
     border: none;
-    height: 60px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
 }
 
 .menu-wrapper .el-menu--horizontal > .el-menu-item {
-    color: rgba(255, 255, 255, 0.75) !important;
-    font-weight: 500;
+    color: var(--text-medium) !important;
+    font-weight: 600;
     transition: var(--transition);
     position: relative;
     background: transparent !important;
     border: none !important;
-    padding: 0 20px !important;
+    padding: 0 12px !important;
+    height: 40px !important;
+    line-height: 40px !important;
+    margin: 0 2px;
+    border-radius: 20px;
+    font-size: 14px;
+    flex-shrink: 0;
     
-    /* 底部下划线：hover 时 width 从 0 过渡到 100% */
     &::after {
         content: "";
         position: absolute;
-        bottom: 0;
-        left: 0;
+        bottom: 4px;
+        left: 50%;
         width: 0;
         height: 2px;
-        background: linear-gradient(90deg, #ff6b9d, #00d4ff);
-        transition: width 0.3s ease;
+        background: var(--color-pink);
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
     }
     
     &:hover {
-        color: #ffffff !important;
+        color: var(--color-pink) !important;
         background: transparent !important;
         
         &::after {
-            width: 100%;
+            width: 15px;
         }
     }
 
     &.is-active {
         color: #ffffff !important;
-        background: transparent !important;
+        background: var(--gradient-main) !important;
+        box-shadow: 0 4px 12px rgba(255, 107, 157, 0.25);
         &::after {
-            width: 100%;
+            display: none;
         }
     }
     
     i {
         color: inherit !important;
-        margin-right: 5px !important;
+        margin-right: 4px !important;
+        font-size: 16px !important;
     }
 }
 
 .menu-wrapper .menu_view .first-item {
     background: transparent !important;
     border: none !important;
+    height: 40px !important;
+    line-height: 40px !important;
     
     .el-sub-menu__title {
-        color: rgba(255, 255, 255, 0.75) !important;
+        color: var(--text-medium) !important;
         background: transparent !important;
-        padding: 0 20px;
+        padding: 0 12px;
+        height: 40px !important;
+        line-height: 40px !important;
+        border-radius: 20px;
         transition: var(--transition);
+        font-weight: 600;
+        font-size: 14px;
         
         &:hover {
-            color: #ffffff !important;
+            color: var(--color-pink) !important;
         }
         
         i {
             color: inherit !important;
+            margin-right: 4px !important;
+            font-size: 16px !important;
         }
     }
     
     &.is-active .el-sub-menu__title {
         color: #ffffff !important;
+        background: var(--gradient-main) !important;
+        box-shadow: 0 4px 12px rgba(255, 107, 157, 0.25);
     }
 }
 
 .index_top .cart {
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--color-pink);
     transition: var(--transition);
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
+    gap: 6px;
+    padding: 0 15px;
+    height: 36px;
     border-radius: 50px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: transparent;
+    border: 1.5px solid var(--color-pink);
+    font-weight: 600;
+    font-size: 13px;
+    font-family: 'Nunito', 'Noto Sans SC', sans-serif;
+    flex-shrink: 0;
+    white-space: nowrap;
+
+    i {
+        font-size: 16px;
+    }
+
     &:hover {
-        color: var(--color-pink);
-        background: rgba(255, 107, 157, 0.1);
-        border-color: rgba(255, 107, 157, 0.3);
-        box-shadow: 0 0 12px rgba(255, 107, 157, 0.3);
+        color: #ffffff;
+        background: var(--gradient-main);
+        border-color: transparent;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
     }
 }
 
+.index_top .user {
+    flex-shrink: 0;
+    margin-left: 10px;
+}
+
+.index_top .user .avatar-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 30px;
+    transition: var(--transition);
+    
+    &:hover {
+        background: rgba(255, 107, 157, 0.05);
+    }
+}
+
+.index_top .user .user-avatar {
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 50%;
+    padding: 1.5px;
+    background: var(--gradient-main);
+    object-fit: cover;
+}
+
 .index_top .user .nickname {
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--text-dark);
+    font-weight: 600;
+    font-size: 13px;
+    max-width: 80px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 

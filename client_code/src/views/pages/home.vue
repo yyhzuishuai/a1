@@ -1,41 +1,62 @@
 <template>
     <div class="home_box">
-
-
+        <!-- Hero Banner -->
+        <div class="hero-banner">
+            <div class="sakura-container">
+                <div class="sakura" style="left: 10%; width: 15px; height: 10px; animation-duration: 7s; animation-delay: 0s;"></div>
+                <div class="sakura" style="left: 30%; width: 12px; height: 8px; animation-duration: 9s; animation-delay: 2s;"></div>
+                <div class="sakura" style="left: 55%; width: 18px; height: 12px; animation-duration: 6s; animation-delay: 1s;"></div>
+                <div class="sakura" style="left: 75%; width: 14px; height: 9px; animation-duration: 8s; animation-delay: 3s;"></div>
+                <div class="sakura" style="left: 90%; width: 16px; height: 11px; animation-duration: 10s; animation-delay: 0.5s;"></div>
+            </div>
+            <div class="hero-content animate-fade-up">
+                <h1 class="text-gradient">欢迎来到动漫周边商店</h1>
+                <p>探索最全、最萌、最酷的动漫周边商品</p>
+                <div class="hero-btns">
+                    <el-button class="btn-gradient" @click="moreClick('dongmanshangpin')">立即探索</el-button>
+                </div>
+            </div>
+        </div>
 
 			<!-- 动漫商品推荐 -->
             <div class="recomList_view">
-<div class="tableName"><span class="animate-fade-up">动漫商品推荐</span></div>
-<div class="list">
-    <div v-for="(item,index) in dongmanshangpinRecomList" @click="detailClick('dongmanshangpin',item.id)" class="item glass-card animate-fade-up" :style="{animationDelay: index*0.08+'s'}">
-        <img v-if="item.imgUrls" :src="item.imgUrls[0]" alt="">
-        <div class="content">
-          
-<div class="title">动漫品牌：{{item.dongmanpinpai}}</div>
-<div class="title">评分：{{item.score}}</div>
-
-            <div class="pricenumdiv">
-<div class="price text-gradient"><span class="unit">￥</span><span class="number">{{item.price}}</span></div>
-            <div class="num-row">
-<div class="thumbsupnum">
-	<span class="iconfont icon-thumb-up-line1"></span>
-	<div class="num">{{item.thumbsupNumber}}</div>
-</div>
-
-<div class="storeupnum">
-	<span class="iconfont icon-likeline4"></span>
-	<div class="num">{{item.storeupNumber}}</div>
-</div>
-
-
-            </div>
-            </div>
-           
-            <div class="gd">查看详情</div>
-        </div>
-    </div>
-</div>
-<div class="more btn-gradient animate-fade-up" @click="moreClick('dongmanshangpin')"><span>更多 ></span></div>
+                <div class="tableName">
+                    <span class="animate-fade-up">动漫商品推荐</span>
+                </div>
+                <div class="list">
+                    <div v-for="(item,index) in dongmanshangpinRecomList" @click="detailClick('dongmanshangpin',item.id)" class="item animate-fade-up" :style="{animationDelay: index*0.08+'s'}">
+                        <div class="img-box">
+                            <img v-if="item.imgUrls" :src="item.imgUrls[0]" alt="">
+                        </div>
+                        <div class="content">
+                            <div class="tag-row">
+                                <span class="brand-tag">{{item.dongmanpinpai}}</span>
+                                <div class="rating">
+                                    <i class="iconfont icon-shoucang1" style="color: #FFB347;"></i>
+                                    <span>{{item.score}}</span>
+                                </div>
+                            </div>
+                            <div class="pricenumdiv">
+                                <div class="price">
+                                    <span class="unit">￥</span>
+                                    <span class="number">{{item.price}}</span>
+                                </div>
+                                <div class="num-row">
+                                    <div class="thumbsupnum" title="点赞">
+                                        <span class="iconfont icon-thumb-up-line1"></span>
+                                        <div class="num">{{item.thumbsupNumber}}</div>
+                                    </div>
+                                    <div class="storeupnum" title="收藏">
+                                        <span class="iconfont icon-likeline4"></span>
+                                        <div class="num">{{item.storeupNumber}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="gd">查看详情</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="more btn-gradient animate-fade-up" @click="moreClick('dongmanshangpin')"><span>更多 ></span></div>
             </div>
 
 			<!-- 周边定制首页展示 -->
@@ -317,54 +338,101 @@
     flex-wrap: wrap;
     background: transparent;
 }
+.hero-banner {
+    width: 100%;
+    height: 450px;
+    position: relative;
+    background: linear-gradient(135deg, #FFE8F3 0%, #FFF3E0 50%, #E8F4FF 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    margin-bottom: 20px;
+    border-radius: 0 0 40px 40px;
+    
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        
+        h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+        
+        p {
+            font-size: 18px;
+            color: var(--text-medium);
+            margin-bottom: 30px;
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+    }
+}
 .recomList_view {
     width: 100%;
     margin: 30px auto 0;
     position: relative;
     order: 3;
-    background: transparent;
-    padding: 40px 7%;
+    background: linear-gradient(180deg, rgba(255, 248, 245, 0) 0%, rgba(255, 240, 236, 0.5) 100%);
+    padding: 60px 7%;
+    border-radius: 40px;
 }
 
 .recomList_view .tableName {
     text-align: left;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 }
 
 .recomList_view .tableName span {
-    color: #ffffff;
-    font-size: 22px;
+    color: var(--text-dark) !important;
+    font-size: 26px;
     font-weight: 700;
     position: relative;
     display: inline-block;
-    padding-top: 25px;
+    padding-top: 28px;
+    font-family: 'Nunito', 'Noto Sans SC', sans-serif;
     
     &::before {
         content: 'Product_Recommendation';
         position: absolute;
         top: 0;
         left: 0;
-        font-weight: 400;
-        font-size: 13px;
-        color: var(--color-pink);
+        font-weight: 800;
+        font-size: 12px;
+        color: #ffffff;
         letter-spacing: 1px;
+        background: var(--gradient-main);
+        padding: 2px 12px;
+        border-radius: 20px;
+        line-height: 1.4;
     }
 }
 
 .recomList_view .more {
     position: absolute;
-    top: 40px;
+    top: 60px;
     right: 7%;
     width: auto;
     height: auto;
-    padding: 8px 20px;
+    padding: 8px 24px;
     border: none;
     line-height: normal;
     z-index: 5;
+    border-radius: 24px;
+    background: var(--gradient-main);
+    transition: var(--transition);
+    cursor: pointer;
     
     span {
         color: #ffffff !important;
         font-size: 14px;
+        font-weight: 600;
+    }
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 107, 157, 0.3);
     }
 }
 
@@ -372,94 +440,127 @@
     width: 100%;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 24px;
-    margin-top: 40px;
+    gap: 30px;
+    margin-top: 0;
 }
 
 .recomList_view .list .item {
     width: 100%;
     margin: 0;
-    border-radius: var(--radius-card);
+    border-radius: 16px;
     overflow: hidden;
-    background: rgba(255, 255, 255, 0.08) !important;
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 107, 157, 0.15) !important;
-    transition: var(--transition);
+    background: #FFFFFF !important;
+    border: 1px solid var(--border-color) !important;
+    box-shadow: 0 4px 20px rgba(255, 107, 157, 0.10);
+    transition: all 0.3s ease;
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
     
     &:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 20px 40px rgba(255, 107, 157, 0.2);
-        border-color: rgba(255, 107, 157, 0.4) !important;
+        transform: translateY(-6px);
+        box-shadow: 0 8px 32px rgba(255, 107, 157, 0.20);
+        border-color: var(--color-pink) !important;
         
-        img {
-            transform: scale(1.08);
+        .img-box img {
+            transform: scale(1.10);
         }
         
         .content .gd {
-            background: linear-gradient(45deg, var(--color-pink), var(--color-blue));
-            color: #fff;
-            box-shadow: 0 0 15px rgba(255, 107, 157, 0.4);
+            background: linear-gradient(135deg, #FF6B9D 0%, #FF8FB1 100%);
+            transform: translateY(-1px);
+            filter: brightness(1.05);
+            color: #ffffff;
         }
     }
+}
+
+.recomList_view .img-box {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
 }
 
 .recomList_view .item img {
     display: block;
     width: 100%;
-    height: 220px;
+    height: 100%;
     object-fit: cover;
-    transition: transform 0.4s ease;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .recomList_view .item .content {
     padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-top: 0;
-    position: relative;
-    z-index: 2;
+    gap: 12px;
 }
 
-.recomList_view .item .content .title {
-    color: rgba(255, 255, 255, 0.65);
-    font-size: 13px;
-    margin: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.recomList_view .tag-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .brand-tag {
+        background: #FFF0EC;
+        color: var(--color-pink);
+        font-size: 12px;
+        padding: 2px 10px;
+        border-radius: 6px;
+        font-weight: 600;
+    }
+
+    .rating {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 13px;
+        color: var(--text-medium);
+        font-weight: 700;
+        
+        i {
+            font-size: 14px;
+        }
+    }
 }
 
 .recomList_view .pricenumdiv {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin: 10px 0;
+    margin: 4px 0;
 }
 
 .recomList_view .price {
+    color: var(--color-pink);
+    font-family: 'Nunito', sans-serif;
+    
     .number {
         font-size: 22px;
-        font-weight: 700;
+        font-weight: 800;
     }
     .unit {
         font-size: 14px;
-        margin-right: 2px;
+        margin-right: 1px;
+        font-weight: 700;
     }
 }
 
 .recomList_view .num-row {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     
     .thumbsupnum, .storeupnum {
         display: flex;
         align-items: center;
         gap: 4px;
-        color: rgba(255, 255, 255, 0.5);
+        color: var(--text-light);
         font-size: 12px;
+        transition: var(--transition);
+        
+        &:hover {
+            color: var(--color-pink);
+        }
         
         i {
             font-size: 14px;
@@ -469,16 +570,16 @@
 
 .recomList_view .content .gd {
     width: 100%;
-    height: 38px;
-    line-height: 38px;
+    height: 40px;
+    line-height: 40px;
     text-align: center;
     font-size: 14px;
-    color: var(--color-pink);
-    background: rgba(255, 107, 157, 0.1);
-    border: 1px solid rgba(255, 107, 157, 0.2);
-    border-radius: 50px;
-    margin-top: 5px;
-    transition: var(--transition);
+    font-weight: 600;
+    color: #ffffff;
+    background: linear-gradient(135deg, #FF6B9D 0%, #FF8FB1 100%);
+    border-radius: 10px;
+    margin-top: 4px;
+    transition: all 0.3s ease;
 }
 .homeList_view {
     width: 100%;
@@ -495,22 +596,27 @@
 }
 
 .homeList_view .tableName span {
-    color: #ffffff;
-    font-size: 22px;
+    color: var(--text-dark) !important;
+    font-size: 26px;
     font-weight: 700;
     position: relative;
     display: inline-block;
-    padding-top: 25px;
+    padding-top: 28px;
+    font-family: 'Nunito', 'Noto Sans SC', sans-serif;
     
     &::before {
         content: 'Product_Display';
         position: absolute;
         top: 0;
         left: 0;
-        font-weight: 400;
-        font-size: 13px;
-        color: #ff6b9d;
+        font-weight: 800;
+        font-size: 12px;
+        color: #ffffff;
         letter-spacing: 1px;
+        background: var(--gradient-main);
+        padding: 2px 12px;
+        border-radius: 20px;
+        line-height: 1.4;
     }
     
     &::after {
@@ -545,10 +651,18 @@
 .homeList_view .list .item {
     width: 100%;
     margin: 0;
-    border-radius: var(--radius-card);
+    border-radius: 16px;
     overflow: hidden;
-    background: var(--bg-card);
+    background: #FFFFFF !important;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 20px rgba(255, 107, 157, 0.08);
     transition: var(--transition);
+    
+    &:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 8px 32px rgba(255, 107, 157, 0.15);
+        border-color: var(--color-pink);
+    }
 }
 
 .homeList_view .item img {
@@ -564,74 +678,88 @@
 }
 
 .homeList_view .content {
-    padding: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.homeList_view .title {
+    color: var(--text-dark) !important;
 }
 
 .homeList_view .merchant-name {
-    color: #ffffff;
+    color: var(--text-medium) !important;
     font-weight: 600;
-    font-size: 15px;
-    margin-bottom: 8px;
+    font-size: 14px;
+    margin-bottom: 4px;
 }
 
 .homeList_view .custom-price {
-    font-size: 13px;
+    font-size: 14px;
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
     
     .price-label {
-        color: rgba(255, 255, 255, 0.55);
+        color: var(--text-light) !important;
     }
     
     .price-num {
-        font-size: 20px;
-        font-weight: 700;
+        font-size: 22px;
+        font-weight: 800;
+        background: var(--gradient-main);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
 }
 
 .homeList_view .activity-title {
-    color: #ffffff;
-    font-weight: bold;
-    font-size: 15px;
-    margin-bottom: 12px;
+    color: var(--text-dark) !important;
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 10px;
 }
 
 .homeList_view .activity-time-tag {
-    background: rgba(255, 107, 157, 0.1);
-    color: #ff6b9d;
-    border: 1px solid rgba(255, 107, 157, 0.3);
-    border-radius: 50px;
+    background: #FFF0EC;
+    color: var(--color-pink) !important;
+    border: none;
+    border-radius: 6px;
     font-size: 12px;
-    padding: 3px 12px;
+    padding: 4px 12px;
     display: inline-block;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
+    font-weight: 600;
 }
 
 .homeList_view .activity-name {
-    color: #ffffff;
-    font-weight: bold;
+    color: var(--text-dark) !important;
+    font-weight: 700;
     font-size: 16px;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
 .homeList_view .info-item {
     display: flex;
     align-items: center;
     gap: 8px;
-    color: var(--color-gray);
+    color: var(--text-medium);
     font-size: 13px;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 
     i {
         font-size: 14px;
-        color: var(--color-blue);
+        color: var(--color-pink);
     }
 
     em {
         font-style: normal;
-        font-weight: 700;
+        font-weight: 800;
         font-size: 16px;
+        background: var(--gradient-main);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
 }
 .newsList_view {
@@ -649,22 +777,27 @@
 }
 
 .newsList_view .tableName span {
-    color: #ffffff;
-    font-size: 22px;
+    color: var(--text-dark) !important;
+    font-size: 26px;
     font-weight: 700;
     position: relative;
     display: inline-block;
-    padding-top: 25px;
+    padding-top: 28px;
+    font-family: 'Nunito', 'Noto Sans SC', sans-serif;
     
     &::before {
         content: 'System_Announcements';
         position: absolute;
         top: 0;
         left: 0;
-        font-weight: 400;
-        font-size: 13px;
-        color: #ff6b9d;
+        font-weight: 800;
+        font-size: 12px;
+        color: #ffffff;
         letter-spacing: 1px;
+        background: var(--gradient-main);
+        padding: 2px 12px;
+        border-radius: 20px;
+        line-height: 1.4;
     }
     
     &::after {
@@ -699,20 +832,20 @@
 .newsList_view .list .item {
     display: flex;
     align-items: center;
-    padding: 20px 24px;
-    border-left: 3px solid transparent;
-    border-image: linear-gradient(180deg, var(--color-pink), var(--color-blue)) 1;
+    padding: 24px;
+    background: #FFFFFF;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(255, 107, 157, 0.06);
+    border-left: 4px solid var(--color-pink);
     cursor: pointer;
     transition: var(--transition);
     
     &:hover {
         transform: translateX(8px);
+        box-shadow: 0 8px 32px rgba(255, 107, 157, 0.12);
         
         .title {
-            background: linear-gradient(45deg, var(--color-pink), var(--color-blue));
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--color-pink);
         }
     }
     
@@ -725,7 +858,7 @@
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--color-pink), var(--color-blue));
+            background: var(--gradient-main);
             animation: pulse-glow 2s infinite;
         }
     }
@@ -741,26 +874,26 @@
             margin-bottom: 10px;
             
             .title {
-                color: #ffffff;
-                font-weight: 600;
-                font-size: 15px;
+                color: var(--text-dark);
+                font-weight: 700;
+                font-size: 16px;
                 transition: var(--transition);
             }
             
             .time-tag {
-                background: rgba(0, 212, 255, 0.1);
-                color: var(--color-blue);
-                border: 1px solid rgba(0, 212, 255, 0.2);
+                background: #F5F0FF;
+                color: var(--text-light);
+                border: none;
                 border-radius: 50px;
                 font-size: 12px;
-                padding: 2px 10px;
+                padding: 2px 12px;
                 white-space: nowrap;
             }
         }
         
         .intro {
-            color: var(--color-gray);
-            font-size: 13px;
+            color: var(--text-medium);
+            font-size: 14px;
             line-height: 1.6;
         }
     }

@@ -2,7 +2,7 @@
     <div class="list-page">
         <div class="breadcrumb-wrapper">
             <div class="bread_view">
-                <el-breadcrumb separator=">" class="breadcrumb">
+                <el-breadcrumb separator="›" class="breadcrumb">
                     <el-breadcrumb-item class="first_breadcrumb" :to="{ path: '/' }">首页</el-breadcrumb-item>
                     <el-breadcrumb-item class="second_breadcrumb" v-for="(item,index) in breadList" :key="index">{{item.name}}</el-breadcrumb-item>
                 </el-breadcrumb>
@@ -11,27 +11,27 @@
                 <el-button class="back_btn btn-gradient" @click="backClick">返回</el-button>
             </div>
         </div>
-		<div class="list_search glass-card">
+		<div class="list_search">
 			<div class="search_view">
 				<div class="search_label">
-					商品名称：
+					商品名称
 				</div>
 				<div class="search_box">
-					<el-input class="search_inp input-dark" v-model="searchQuery.shangpinmingcheng" placeholder="请输入商品名称"
+					<el-input class="search_inp" v-model="searchQuery.shangpinmingcheng" placeholder="搜索商品名称..."
 						clearable>
 					</el-input>
 				</div>
 			</div>
             <div class="search_view">
                 <div class="search_label">
-                    商品类型：
+                    商品类型
                 </div>
                 <div class="search_box">
                     <el-select
-                        class="search_sel input-dark"
+                        class="search_sel"
                         clearable
                         v-model="searchQuery.shangpinleixing"
-                        placeholder="请选择商品类型"
+                        placeholder="全部分类"
                     >
                         <el-option v-for="item in shangpinleixingLists" :label="item" :value="item"></el-option>
                     </el-select>
@@ -39,20 +39,23 @@
             </div>
 			<div class="search_view">
 				<div class="search_label">
-					价格：
+					价格区间
 				</div>
 				<div class="search_box price_range">
-					<el-input class="search_inp input-dark" v-model="searchQuery.priceStart" placeholder="最小价格"
+					<el-input class="search_inp" v-model="searchQuery.priceStart" placeholder="最低"
 						clearable>
 					</el-input>
                     <span class="range_divider">-</span>
-					<el-input class="search_inp input-dark" v-model="searchQuery.priceEnd" placeholder="最大价格"
+					<el-input class="search_inp" v-model="searchQuery.priceEnd" placeholder="最高"
 						clearable>
 					</el-input>
 				</div>
 			</div>
 			<div class="search_btn_view">
-				<el-button class="search_btn btn-gradient" @click="searchClick">搜索</el-button>
+				<el-button class="search_btn" @click="searchClick">
+                    <el-icon><Search /></el-icon>
+                    <span>搜索</span>
+                </el-button>
 				<el-button class="add_btn btn-gradient" v-if="btnAuth('dongmanshangpin','新增')" @click="addClick">新增</el-button>
 			</div>
 		</div>
@@ -80,37 +83,34 @@
 
 
                 <div class="data_view">
-<div class="item glass-card animate-fade-up" v-for="(item,index) in list" :key="item.id" @click.stop="detailClick(item.id)" :style="{animationDelay: index*0.08+'s'}">
-  
-      <div class="img_box">
-        
-        <img :src="item.imgUrls[0]" @click.stop="preViewClick(item.imgUrls[0])">
-      </div>
-  
-  <div class="content">
-                            <div class="data_title_row">
-                                <span class="data_title">
-                                    动漫品牌：{{item.dongmanpinpai}}
-                                </span>
-                                <span class="data_score">
-                                    评分：{{item.score}}
-                                </span>
+                    <div class="item animate-fade-up" v-for="(item,index) in list" :key="item.id" @click.stop="detailClick(item.id)" :style="{animationDelay: index*0.08+'s'}">
+                        <div class="img_box">
+                            <img :src="item.imgUrls[0]" @click.stop="preViewClick(item.imgUrls[0])">
+                        </div>
+                        <div class="content">
+                            <div class="tag-row">
+                                <span class="brand-tag">{{item.dongmanpinpai}}</span>
+                                <div class="rating">
+                                    <i class="iconfont icon-shoucang1" style="color: #FFB347;"></i>
+                                    <span>{{item.score}}</span>
+                                </div>
                             </div>
-
-    <div class="data_price"><span class="price-num">￥{{item.price}}</span></div>
-    <div class="count-row">
-                                <div class="data_like">
+                            <div class="data_price">
+                                <span class="unit">￥</span>
+                                <span class="price-num">{{item.price}}</span>
+                            </div>
+                            <div class="count-row">
+                                <div class="data_like" title="点赞">
                                     <span class="iconfont icon-thumb-up-line1"></span>
                                     <div class="like_num">{{item.thumbsupNumber || 0}}</div>
                                 </div>
-
-                                <div class="data_collect">
+                                <div class="data_collect" title="收藏">
                                     <span class="iconfont icon-likeline4"></span>
                                     <div class="collect_num">{{item.storeupNumber || 0}}</div>
                                 </div>
-    </div>
-  </div>
-</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
 
@@ -332,29 +332,36 @@
 .list-page {
     background: transparent !important;
     min-height: 100vh;
-    padding: 30px 7%;
+    padding: 30px 7% 60px;
     width: 100%;
 }
 
 .breadcrumb-wrapper {
-    margin-bottom: 25px;
+    margin-bottom: 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 
     .breadcrumb {
-        font-size: 16px;
+        font-size: 15px;
+        font-family: 'Nunito', 'Noto Sans SC', sans-serif;
         
         ::v-deep .el-breadcrumb__inner {
-            color: var(--color-gray) !important;
+            color: var(--text-medium) !important;
+            font-weight: 500;
             &.is-link:hover {
                 color: var(--color-pink) !important;
             }
         }
+
+        ::v-deep .el-breadcrumb__item:last-child .el-breadcrumb__inner {
+            color: var(--color-pink) !important;
+            font-weight: 700;
+        }
         
         ::v-deep .el-breadcrumb__separator {
-            color: var(--color-pink) !important;
-            font-weight: bold;
+            color: var(--text-light) !important;
+            margin: 0 8px;
         }
     }
 }
@@ -363,14 +370,13 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 24px;
-    margin-bottom: 30px;
-    background: rgba(255, 255, 255, 0.05) !important;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 107, 157, 0.2);
+    gap: 20px;
+    margin-bottom: 40px;
+    background: #FFFFFF !important;
+    border: none;
     border-radius: 20px;
-    padding: 24px;
+    padding: 24px 32px;
+    box-shadow: 0 2px 16px rgba(255, 107, 157, 0.08);
     
     .search_view {
         display: flex;
@@ -378,13 +384,14 @@
         gap: 12px;
         
         .search_label {
-            color: var(--color-gray);
+            color: var(--text-dark);
             font-size: 14px;
+            font-weight: 600;
             white-space: nowrap;
         }
         
         .search_box {
-            width: 200px;
+            width: 180px;
             
             &.price_range {
                 width: auto;
@@ -393,62 +400,122 @@
                 gap: 8px;
                 
                 .range_divider {
-                    color: var(--color-gray);
+                    color: var(--color-pink);
+                    font-weight: bold;
                 }
                 
                 .search_inp {
-                    width: 120px;
+                    width: 100px;
                 }
             }
         }
     }
     
     ::v-deep .el-input__wrapper, ::v-deep .el-select__wrapper {
-        background: rgba(255, 255, 255, 0.05) !important;
-        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1) inset !important;
+        background: var(--bg-primary) !important;
+        box-shadow: none !important;
+        border: 1.5px solid var(--border-color) !important;
         border-radius: 12px;
+        padding: 0 12px;
+        transition: var(--transition);
+        height: 40px;
+        
+        &.is-focus {
+            border-color: var(--color-pink) !important;
+            box-shadow: 0 0 0 4px rgba(255, 107, 157, 0.1) !important;
+        }
         
         .el-input__inner, .el-select__placeholder {
-            color: #ffffff !important;
+            color: var(--text-dark) !important;
+            font-size: 14px;
             &::placeholder {
-                color: rgba(255, 255, 255, 0.3) !important;
+                color: #C4B0CE !important;
             }
         }
     }
 
     ::v-deep .el-select__caret {
         color: var(--color-pink) !important;
+        /* 这里可以进一步通过 CSS content 替换图标，但通常 Element Plus 使用 svg，建议保持色值 */
+    }
+
+    .search_btn_view {
+        margin-left: auto;
+        display: flex;
+        gap: 12px;
+
+        .search_btn {
+            background: var(--gradient-main);
+            border: none;
+            border-radius: 12px;
+            color: #ffffff;
+            padding: 0 24px;
+            height: 40px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
+            cursor: pointer;
+
+            &:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(255, 107, 157, 0.3);
+                filter: brightness(1.05);
+            }
+        }
     }
 }
 
 .sort-wrapper {
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 12px;
-    padding: 12px 20px;
+    background: transparent;
+    padding: 0;
     margin-bottom: 30px;
     display: flex;
-    gap: 15px;
+    gap: 12px;
     
     .item {
-        background: transparent;
+        background: #FFF0EC;
         border: none;
-        color: var(--color-gray);
-        font-size: 15px;
+        color: var(--color-pink);
+        font-size: 14px;
+        font-weight: 600;
         transition: var(--transition);
-        padding: 8px 16px;
+        padding: 8px 20px;
+        height: auto;
+        border-radius: 8px;
+        margin: 0;
         
         &:hover {
+            background: var(--gradient-main);
             color: #ffffff;
+            
+            .icon {
+                color: #ffffff !important;
+            }
+            span {
+                background: none !important;
+                -webkit-text-fill-color: #ffffff !important;
+            }
         }
         
         &.active {
+            background: var(--gradient-main);
             color: #ffffff;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(255, 107, 157, 0.2);
+            
+            .icon {
+                color: #ffffff !important;
+            }
+            span {
+                background: none !important;
+                -webkit-text-fill-color: #ffffff !important;
+            }
         }
         
         .icon {
             margin-right: 6px;
+            color: var(--color-pink);
         }
     }
 }
@@ -456,38 +523,38 @@
 .data_view {
     display: grid !important;
     grid-template-columns: repeat(4, 1fr) !important;
-    gap: 24px !important;
-    margin: 30px 0 40px !important;
+    gap: 30px !important;
+    margin: 0 0 50px !important;
     width: 100% !important;
     
     .item {
-        background: rgba(255, 255, 255, 0.05) !important;
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border: 1px solid rgba(255, 107, 157, 0.18) !important;
-        border-radius: 20px !important;
+        background: #FFFFFF !important;
+        border: 1px solid var(--border-color) !important;
+        border-radius: 16px !important;
         overflow: hidden;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 20px rgba(255, 107, 157, 0.08);
         cursor: pointer;
         position: relative;
         width: 100% !important;
         margin: 0 !important;
+        display: flex;
+        flex-direction: column;
         
         &:hover {
             transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(255, 107, 157, 0.18);
-            border-color: rgba(255, 107, 157, 0.45) !important;
+            box-shadow: 0 12px 32px rgba(255, 107, 157, 0.15);
+            border-color: var(--color-pink) !important;
             
             .img_box img {
-                transform: scale(1.08);
+                transform: scale(1.10);
             }
         }
         
         .img_box {
             width: 100% !important;
-            height: 220px;
+            height: 200px;
             overflow: hidden;
-            border-radius: 16px 16px 0 0;
             display: block;
             
             img {
@@ -500,77 +567,70 @@
         }
         
         .content {
-            padding: 14px 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
             
-            .data_title_row {
+            .tag-row {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                margin-bottom: 8px;
-                gap: 10px;
                 
-                .data_title {
-                    color: rgba(255, 255, 255, 0.55);
-                    font-size: 13px;
-                    @extend .text-one-row;
-                    flex: 1;
+                .brand-tag {
+                    background: #FFF0EC;
+                    color: var(--color-pink);
+                    font-size: 12px;
+                    padding: 2px 10px;
+                    border-radius: 6px;
+                    font-weight: 600;
                 }
                 
-                .data_score {
-                    color: rgba(255, 255, 255, 0.55);
+                .rating {
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
                     font-size: 13px;
-                    white-space: nowrap;
+                    color: var(--text-medium);
+                    font-weight: 700;
                 }
             }
             
             .data_price {
-                margin: 8px 0;
+                margin: 4px 0;
+                color: var(--color-pink);
+                font-family: 'Nunito', sans-serif;
+                
+                .unit {
+                    font-size: 14px;
+                    font-weight: 700;
+                }
                 
                 .price-num {
-                    background: linear-gradient(135deg, #ff6b9d, #00d4ff);
+                    background: var(--gradient-main);
                     -webkit-background-clip: text;
                     -webkit-text-fill-color: transparent;
-                    font-size: 22px;
-                    font-weight: 700;
+                    font-size: 24px;
+                    font-weight: 800;
                     display: inline-block;
                 }
             }
             
             .count-row {
                 display: flex;
-                gap: 10px;
-                margin-top: 12px;
+                gap: 12px;
+                margin-top: 4px;
                 
                 .data_like, .data_collect {
                     display: flex;
                     align-items: center;
                     gap: 6px;
-                    padding: 6px 16px;
-                    border-radius: 50px;
-                    font-size: 13px;
-                    transition: all 0.3s ease;
-                    cursor: pointer;
-                }
-                
-                .data_like {
-                    background: rgba(0, 212, 255, 0.12);
-                    color: #00d4ff;
-                    border: 1px solid rgba(0, 212, 255, 0.3);
+                    color: var(--text-light);
+                    font-size: 12px;
+                    transition: var(--transition);
                     
                     &:hover {
-                        background: rgba(0, 212, 255, 0.22);
-                        box-shadow: 0 0 14px rgba(0, 212, 255, 0.5);
-                    }
-                }
-                
-                .data_collect {
-                    background: rgba(255, 107, 157, 0.12);
-                    color: #ff6b9d;
-                    border: 1px solid rgba(255, 107, 157, 0.3);
-                    
-                    &:hover {
-                        background: rgba(255, 107, 157, 0.22);
-                        box-shadow: 0 0 14px rgba(255, 107, 157, 0.5);
+                        color: var(--color-pink);
                     }
                 }
             }
@@ -581,23 +641,35 @@
 ::v-deep .el-pagination {
     justify-content: center;
     .el-pager li {
-        background: rgba(255, 255, 255, 0.05) !important;
-        color: var(--color-gray) !important;
+        background: #FFFFFF !important;
+        color: var(--text-medium) !important;
+        border: 1px solid var(--border-color);
         border-radius: 8px;
+        margin: 0 4px;
+        font-weight: 600;
         &:hover {
             color: var(--color-pink) !important;
+            border-color: var(--color-pink);
         }
         &.is-active {
-            background: linear-gradient(45deg, var(--color-pink), var(--color-blue)) !important;
+            background: var(--gradient-main) !important;
             color: #ffffff !important;
+            border: none;
+            box-shadow: 0 4px 12px rgba(255, 107, 157, 0.2);
         }
     }
     .btn-prev, .btn-next {
-        background: rgba(255, 255, 255, 0.05) !important;
-        color: var(--color-gray) !important;
+        background: #FFFFFF !important;
+        color: var(--text-medium) !important;
+        border: 1px solid var(--border-color);
         border-radius: 8px;
+        padding: 0 12px;
+        &:hover {
+            color: var(--color-pink) !important;
+            border-color: var(--color-pink);
+        }
         &:disabled {
-            opacity: 0.3;
+            opacity: 0.4;
         }
     }
 }
